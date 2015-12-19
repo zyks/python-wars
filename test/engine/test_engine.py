@@ -36,7 +36,7 @@ class SystemTest(System):
     def start(self):
         pass
 
-    def update(self):
+    def update(self, time):
         pass
 
     def end(self):

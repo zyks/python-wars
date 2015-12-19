@@ -8,7 +8,7 @@ class System(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self, time):
         pass
 
     @abstractmethod
