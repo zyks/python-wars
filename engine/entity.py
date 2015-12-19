@@ -1,3 +1,5 @@
+from engine.exceptions import NonexistentComponent
+
 class Entity(object):
     def __init__(self):
         self.components = {}
@@ -11,10 +13,11 @@ class Entity(object):
                 self.components[type(c)] = c
 
     def remove(self, component):
-        component_type = type(component)
-
-        if component_type in self.components:
+        if component in self.components:
             del self.components[component]
 
     def get(self, component):
-        return self.components[type(component)]
+        if component not in self.components:
+            raise NonexistentComponent(self, component)
+
+        return self.components[component]
