@@ -26,6 +26,10 @@ class MatchingComponentsEntityGroup(object):
             if self.match_group(entity, name):
                 self.add_to_group(entity, name)
 
+    def on_entity_unregistered(self, entity):
+        for _, group in self.groups.items():
+            group.remove(entity)
+
     def match_group(self, entity, group):
         for _, component in entity.components.items():
             if not isinstance(component, tuple(self.registered_groups[group])):
