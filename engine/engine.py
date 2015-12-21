@@ -35,6 +35,6 @@ class Engine(object):
         for system, _ in self._system_list:
             system.update(time)
 
-    def get_entity_by_group(self, name):
-        return self._match_entity_components.get(name)
+    def get_entity_by_group(self, group):
+        return self._match_entity_components.get(group)
 

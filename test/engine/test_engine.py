@@ -2,6 +2,7 @@ import unittest
 from engine.engine import Engine
 from engine.entity import Entity
 from engine.system import System
+from engine.exceptions import NonexistentEntityGroup
 
 
 class TestEngine(unittest.TestCase):
@@ -52,6 +53,9 @@ class TestEngine(unittest.TestCase):
         self.engine.remove_entity(self.entity)
         res = self.engine.get_entity_by_group('test1')
         self.assertEqual(res, [])
+
+    def test_get_non_existent_group(self):
+        self.assertRaises(NonexistentEntityGroup, self.engine.get_entity_by_group, 'nonexistent-group')
 
 
 class SystemTest(System):
