@@ -10,7 +10,7 @@ class TestEngine(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         super(TestEngine, self).__init__(*args, **kwargs)
         self.engine = Engine()
-        self.engine._match_entity_components.add('test1', [Component1])
+        self.engine._entity_components_packer.add('test1', [Component1])
         self.entity = Entity()
         self.entity.add(Component1())
 

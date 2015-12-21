@@ -1,7 +1,7 @@
 from engine.exceptions import NonexistentEntityGroup
 
 
-class MatchingComponentsEntityGroup(object):
+class EntityComponentsPacker(object):
     def __init__(self):
         self.registered_groups = {}
         self.groups = {}

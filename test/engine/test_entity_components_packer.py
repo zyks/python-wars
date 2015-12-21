@@ -1,13 +1,13 @@
 import unittest
 from engine.entity import Entity
-from engine.matchingComponentsEntityGroup import MatchingComponentsEntityGroup
+from engine.entity_components_packer import EntityComponentsPacker
 
 
-class TestMatchingComponentsEntityGroup(unittest.TestCase):
+class TestEntityComponentsPacker(unittest.TestCase):
 
     def __init__(self, *args, **kwargs):
-        super(TestMatchingComponentsEntityGroup, self).__init__(*args, **kwargs)
-        self.sut = MatchingComponentsEntityGroup()
+        super(TestEntityComponentsPacker, self).__init__(*args, **kwargs)
+        self.sut = EntityComponentsPacker()
         self.entity = Entity()
         self.component1 = Component1()
         self.component2 = Component2()

@@ -1,4 +1,4 @@
-from engine.matchingComponentsEntityGroup import MatchingComponentsEntityGroup
+from engine.entity_components_packer import EntityComponentsPacker
 
 
 class Engine(object):
@@ -6,16 +6,16 @@ class Engine(object):
     def __init__(self):
         self._entity_list = []
         self._system_list = []
-        self._match_entity_components = MatchingComponentsEntityGroup()
+        self._entity_components_packer = EntityComponentsPacker()
 
     def add_entity(self, entity):
         self._entity_list.append(entity)
-        self._match_entity_components.on_entity_registered(entity)
+        self._entity_components_packer.on_entity_registered(entity)
 
     def remove_entity(self, entity):
         if entity in self._entity_list:
             self._entity_list.remove(entity)
-            self._match_entity_components.on_entity_unregistered(entity)
+            self._entity_components_packer.on_entity_unregistered(entity)
 
     def add_system(self, system, priority):
         index = 0
@@ -36,5 +36,5 @@ class Engine(object):
             system.update(time)
 
     def get_entity_by_group(self, group):
-        return self._match_entity_components.get(group)
+        return self._entity_components_packer.get(group)
 
