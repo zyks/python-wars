@@ -1,6 +1,7 @@
 import unittest
+
 from engine.engine import Engine
-from engine.entity_creator import EntityCreator
+from entity_creator import EntityCreator
 
 
 class TestEntityCreator(unittest.TestCase):
@@ -16,3 +17,4 @@ class TestEntityCreator(unittest.TestCase):
     def test_create_snake(self):
         self.entity_creator.create_snake(1)
         self.assertEqual(len(self.entity_creator._engine._entity_list), 5)
+
