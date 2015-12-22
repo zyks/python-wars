@@ -2,6 +2,7 @@ from engine.exceptions import NonexistentEntityGroup
 
 
 class EntityComponentsPacker(object):
+
     def __init__(self):
         self.registered_groups = {}
         self.groups = {}
@@ -31,14 +32,16 @@ class EntityComponentsPacker(object):
             group.remove(entity)
 
     def match_group(self, entity, group):
+        hits = 0
         for _, component in entity.components.items():
-            if not isinstance(component, tuple(self.registered_groups[group])):
-                return False
+            if isinstance(component, tuple(self.registered_groups[group])):
+                hits += 1
 
-        return True
+        return hits == len(self.registered_groups[group])
 
     def add_to_group(self, entity, group):
         if group in self.groups:
             self.groups[group].append(entity)
         else:
             self.groups[group] = [entity]
+
