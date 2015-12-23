@@ -23,8 +23,8 @@ class TestEngine(unittest.TestCase):
     def test_add_two_systems(self):
         system1 = SystemTest()
         system2 = SystemTest()
-        self.engine.add_system(system1, 2)
-        self.engine.add_system(system2, 1)
+        self.engine.add_system(system1, 1)
+        self.engine.add_system(system2, 2)
         self.assertEqual(self.engine._system_list[0][0], system2)
         self.assertEqual(self.engine._system_list[1][0], system1)
 

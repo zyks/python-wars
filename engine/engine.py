@@ -20,7 +20,7 @@ class Engine(object):
     def add_system(self, system, priority):
         index = 0
         for _, p in self._system_list:
-            if p < priority:
+            if p > priority:
                 index += 1
         self._system_list.insert(index, (system, priority))
         system.start()
