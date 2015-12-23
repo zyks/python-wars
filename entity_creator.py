@@ -1,3 +1,4 @@
+from components.tile_map import TileMap
 from engine.entity import Entity
 from components.graphics import Graphics
 from components.position import Position
@@ -29,4 +30,10 @@ class EntityCreator(object):
         entity.add(SnakeInfo(player, is_head, is_tail, next_s))
         self._engine.add_entity(entity)
         return entity
+
+    def create_map(self, file):
+        tile_map = TileMap()
+        tile_map.load_from_file(file)
+        entity = Entity([tile_map])
+        self._engine.add_entity(entity)
 
