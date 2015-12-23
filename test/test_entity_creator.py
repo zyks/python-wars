@@ -19,7 +19,7 @@ class TestEntityCreator(unittest.TestCase):
         self.assertEqual(self.engine.get_entity_by_group('renderable'), self.engine._entity_list)
 
     def test_create_snake(self):
-        self.entity_creator.create_snake(1, None, None)
+        self.entity_creator.create_snake(1, None, None, None)
         self.assertEqual(len(self.entity_creator._engine._entity_list), 5)
         self.assertEqual(self.engine.get_entity_by_group('renderable'), self.engine._entity_list)
 
