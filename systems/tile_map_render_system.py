@@ -23,7 +23,6 @@ class TileMapRenderSystem(System):
                 for tile in row:
                     atlas_area = (game_config.tile_size * tile.value, 0,
                                   game_config.tile_size, game_config.tile_size)
-                    t = type(game_config.tile_size * tile.value)
                     self._screen.blit(self._atlas, (x, y), atlas_area)
                     x += game_config.tile_size
                 y += game_config.tile_size
