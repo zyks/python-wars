@@ -1,8 +1,10 @@
 import pygame
 import sys
 from components.graphics import Graphics
+from components.motion import Motion
 from components.position import Position
 from components.tile_map import TileMap
+from components.snake_info import SnakeInfo
 import game_config
 from pygame.constants import *
 from engine.engine import Engine
@@ -10,6 +12,7 @@ from engine.frame_provider import FrameProvider
 from entity_creator import EntityCreator
 from systems.render_system import RenderSystem
 from systems.tile_map_render_system import TileMapRenderSystem
+from systems.snake_movement_system import SnakeMovementSystem
 
 
 class PythonWars():
@@ -22,20 +25,27 @@ class PythonWars():
         self.screen = pygame.display.set_mode(game_config.screen_size)
         self.frame_provider = FrameProvider(pygame.time.get_ticks)
 
-
         self.init_engine()
 
     def init_engine(self):
         tile_atlas = pygame.image.load('assets/tiles.jpg')
         self.engine._entity_components_packer.add('render', [Graphics, Position])
+
         self.engine._entity_components_packer.add('tile_map', [TileMap])
         self.render_system = RenderSystem(self.engine, self.screen)
         self.engine.add_system(TileMapRenderSystem(self.engine, self.screen, tile_atlas), 2)
         self.engine.add_system(self.render_system, 1)
 
+        self.engine._entity_components_packer.add('snake-movement', [Position, Motion, SnakeInfo])
+        render_system = RenderSystem(self.engine, self.screen)
+        snake_movement_system = SnakeMovementSystem(self.engine, 200)
+        self.engine.add_system(render_system, 1)
+        self.engine.add_system(snake_movement_system, 2)
+
         head_image = pygame.image.load('assets/head.jpg')
         body_image = pygame.image.load('assets/body.jpg')
-        self.creator.create_snake(1, head_image, body_image)
+        tail_image = pygame.image.load('assets/tail.jpg')
+        self.creator.create_snake(1, head_image, body_image, tail_image)
 
         self.creator.create_map("assets/maps/0.txt")
 
