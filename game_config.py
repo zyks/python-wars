@@ -1,3 +1,3 @@
-screen_size = (800, 600)
+screen_size = (800, 608)
 title = "Python Wars"
 tile_size = 32
