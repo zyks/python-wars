@@ -30,8 +30,8 @@ class PythonWars():
         self.engine._entity_components_packer.add('render', [Graphics, Position])
         self.engine._entity_components_packer.add('tile_map', [TileMap])
         self.render_system = RenderSystem(self.engine, self.screen)
-        self.engine.add_system(TileMapRenderSystem(self.engine, self.screen, tile_atlas), 1)
-        self.engine.add_system(self.render_system, 2)
+        self.engine.add_system(TileMapRenderSystem(self.engine, self.screen, tile_atlas), 2)
+        self.engine.add_system(self.render_system, 1)
 
         head_image = pygame.image.load('assets/head.jpg')
         body_image = pygame.image.load('assets/body.jpg')
