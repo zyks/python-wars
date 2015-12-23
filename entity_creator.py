@@ -4,6 +4,7 @@ from engine.entity import Entity
 from components.graphics import Graphics
 from components.position import Position
 from components.snake_info import SnakeInfo
+from components.player import Player
 import game_config
 
 
@@ -12,6 +13,13 @@ class EntityCreator(object):
     def __init__(self, engine):
         self._engine = engine
 
+    def create_player(self, snake):
+        player_component = Player()
+        player_component.snake = snake
+        player = Entity(player_component)
+        self._engine.add_entity(player)
+
+
     def create_snake(self, player, head_image, body_image, tail_image):
         x = 320
         y = 320
@@ -19,13 +27,16 @@ class EntityCreator(object):
 
         # create snake tail
         next_s = self.create_snake_segment(tail_image, x, y, 0, player, False, True, None)
+        snake = [next_s]
 
         for i in range(1, 4):
             current = self.create_snake_segment(body_image, x + i * step, y, 0, player, False, False, next_s)
+            snake = [current] + snake
             next_s = current
 
         # create snake head
-        self.create_snake_segment(head_image, x + 4 * step, y, 0, player, True, False, next_s)
+        snake = [(self.create_snake_segment(head_image, x + 4 * step, y, 0, player, True, False, next_s))] + snake
+        return snake
 
     def create_snake_segment(self, image, x, y, rotation, player, is_head, is_tail, next_s):
         entity = Entity()
