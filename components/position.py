@@ -5,3 +5,8 @@ class Position(object):
         self.y = y
         self.rotation = rotation
 
+    def set(self, position):
+        self.x = position.x
+        self.y = position.y
+        self.rotation = position.rotation
+
