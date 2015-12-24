@@ -30,17 +30,17 @@ class SnakeControlSystem(System):
                 motion.x_velocity = 0
                 motion.changes_blocked = True
 
-            if pressed[pygame.K_DOWN] and motion.y_velocity == 0:
+            elif pressed[pygame.K_DOWN] and motion.y_velocity == 0:
                 motion.y_velocity = game_config.tile_size
                 motion.x_velocity = 0
                 motion.changes_blocked = True
 
-            if pressed[pygame.K_LEFT] and motion.x_velocity == 0:
+            elif pressed[pygame.K_LEFT] and motion.x_velocity == 0:
                 motion.x_velocity = (-1) * game_config.tile_size
                 motion.y_velocity = 0
                 motion.changes_blocked = True
 
-            if pressed[pygame.K_RIGHT] and motion.x_velocity == 0:
+            elif pressed[pygame.K_RIGHT] and motion.x_velocity == 0:
                 motion.x_velocity = game_config.tile_size
                 motion.y_velocity = 0
                 motion.changes_blocked = True
