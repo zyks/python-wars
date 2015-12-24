@@ -22,51 +22,52 @@ class SnakeMovementSystem(System):
         for entity in entities:
             info = entity.get(SnakeInfo)
 
-            if info.is_head and self._elapsed_time > self._wait_interval:
-                before_tail = None
-                tail = None
-                for e in entities:
-                    e_next = e.get(SnakeInfo).next_segment
-                    if e_next is not None:
-                        e_next_info = e_next.get(SnakeInfo)
-                        if e_next_info.player == info.player and e_next_info.is_tail:
-                            before_tail = e
-                            tail = e_next
-                            break
+            if not info.is_head or self._elapsed_time < self._wait_interval:
+                continue
 
-                head_pos = entity.get(Position)
-                head_mot = entity.get(Motion)
-                tail_pos = tail.get(Position)
-                bef_tail_pos = before_tail.get(Position)
-                bef_tail_info = before_tail.get(SnakeInfo)
+            tail = self._find_segment_pointing_at(entities, None)
+            b_tail = self._find_segment_pointing_at(entities, tail)
+            bb_tail = self._find_segment_pointing_at(entities, b_tail)
 
-                tail_pos.x = bef_tail_pos.x
-                tail_pos.y = bef_tail_pos.y
-                bef_tail_pos.x = head_pos.x
-                bef_tail_pos.y = head_pos.y
-                head_pos.x = head_pos.x + head_mot.x_velocity
-                head_pos.y = head_pos.y + head_mot.y_velocity
+            head_pos = entity.get(Position)
+            head_mot = entity.get(Motion)
+            tail_pos = tail.get(Position)
+            bef_tail_pos = b_tail.get(Position)
+            bef_tail_info = b_tail.get(SnakeInfo)
 
-                if head_pos.x < 0:
-                    head_pos.x += game_config.screen_size[0]
-                if head_pos.x >= game_config.screen_size[0]:
-                    head_pos.x -= game_config.screen_size[0]
+            tail_pos.set(bef_tail_pos)
+            bef_tail_pos.set(head_pos)
+            head_pos.x = head_pos.x + head_mot.x_velocity
+            head_pos.y = head_pos.y + head_mot.y_velocity
+            head_mot.changes_blocked = False
 
-                if head_pos.y < 0:
-                    head_pos.y += game_config.screen_size[1]
-                if head_pos.y >= game_config.screen_size[1]:
-                    head_pos.y -= game_config.screen_size[1]
+            self._wrap_position(head_pos)
 
-                bef_tail_info.next_segment = info.next_segment
-                for e in entities:
-                    e_info = e.get(SnakeInfo)
-                    if e_info.player == info.player and e_info.next_segment == before_tail:
-                        e_info.next_segment = tail
-                        break
-                info.next_segment = before_tail
+            bef_tail_info.next_segment = info.next_segment
+            bb_tail.get(SnakeInfo).next_segment = tail
+            info.next_segment = b_tail
 
-                self._elapsed_time -= self._wait_interval
+            self._elapsed_time -= self._wait_interval
 
     def end(self):
         pass
+
+    def _wrap_position(self, position):
+        if position.x < 0:
+            position.x += game_config.screen_size[0]
+        if position.x >= game_config.screen_size[0]:
+            position.x -= game_config.screen_size[0]
+
+        if position.y < 0:
+            position.y += game_config.screen_size[1]
+        if position.y >= game_config.screen_size[1]:
+            position.y -= game_config.screen_size[1]
+
+    def _find_segment_pointing_at(self, entities, target):
+        for e in entities:
+            e_info = e.get(SnakeInfo)
+            if e_info.next_segment == target:
+                return e
+
+        return None
 
