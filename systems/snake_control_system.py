@@ -20,27 +20,30 @@ class SnakeControlSystem(System):
 
         for entity in entities:
             info = entity.get(SnakeInfo)
-
-            if not info.is_head:
-                continue
-
             motion = entity.get(Motion)
+
+            if not info.is_head or motion.changes_blocked:
+                continue
 
             if pressed[pygame.K_UP] and motion.y_velocity == 0:
                 motion.y_velocity = (-1) * game_config.tile_size
                 motion.x_velocity = 0
+                motion.changes_blocked = True
 
             if pressed[pygame.K_DOWN] and motion.y_velocity == 0:
                 motion.y_velocity = game_config.tile_size
                 motion.x_velocity = 0
+                motion.changes_blocked = True
 
             if pressed[pygame.K_LEFT] and motion.x_velocity == 0:
                 motion.x_velocity = (-1) * game_config.tile_size
                 motion.y_velocity = 0
+                motion.changes_blocked = True
 
             if pressed[pygame.K_RIGHT] and motion.x_velocity == 0:
                 motion.x_velocity = game_config.tile_size
                 motion.y_velocity = 0
+                motion.changes_blocked = True
 
     def end(self):
         pass
