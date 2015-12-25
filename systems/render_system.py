@@ -20,7 +20,9 @@ class RenderSystem(System):
             image_position = graphics.image.get_rect()
             image_position.x = entity_position.x
             image_position.y = entity_position.y
-            self._background.blit(graphics.image, image_position)
+            atlas_area = (graphics.x, graphics.y,
+                          graphics.width, graphics.height)
+            self._background.blit(graphics.image, image_position, atlas_area)
 
     def end(self):
         pass
