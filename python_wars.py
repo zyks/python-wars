@@ -8,11 +8,13 @@ from components.motion import Motion
 from components.position import Position
 from components.tile_map import TileMap
 from components.snake_info import SnakeInfo
+from components.power_up import PowerUp
 from components.player import Player
 import game_config
 from engine.engine import Engine
 from engine.frame_provider import FrameProvider
 from entity_creator import EntityCreator
+from systems.power_up_spawn_system import PowerUpSpawnSystem
 from systems.render_system import RenderSystem
 from systems.snake_collision_system import SnakeCollisionSystem
 from systems.snake_control_system import SnakeControlSystem
@@ -48,8 +50,10 @@ class PythonWars(object):
         self.engine._entity_components_packer.add('snake-control', [Motion, SnakeInfo])
         self.engine._entity_components_packer.add('tile_map', [TileMap])
         self.engine._entity_components_packer.add('player', [Player])
+        self.engine._entity_components_packer.add('power_up', [Position, PowerUp])
 
         self.engine.add_system(SnakeCollisionSystem(self.engine), 0)
+        self.engine.add_system(PowerUpSpawnSystem(self.engine, self.creator), 0)
         self.engine.add_system(TileMapRenderSystem(self.engine, self.screen, self.sprites['tile_atlas']), 2)
         self.engine.add_system(RenderSystem(self.engine, self.screen), 1)
         self.engine.add_system(SnakeMovementSystem(self.engine, 200), 2)
