@@ -39,7 +39,7 @@ class PythonWars(object):
 
     def load_sprites(self):
         self.sprites = {'tile_atlas': pygame.image.load('assets/tiles.jpg'),
-                        'power_up_atlas': pygame.image.load('assets/power_ups.jpg'),
+                        'power_up_atlas': pygame.image.load('assets/power_ups.png'),
                         'snake_head': pygame.image.load('assets/head.jpg'),
                         'snake_body': pygame.image.load('assets/body.jpg'),
                         'snake_tail': pygame.image.load('assets/tail.jpg')}
