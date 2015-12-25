@@ -1,4 +1,5 @@
 from enum import Enum
+import random
 
 
 class TileMap(object):
@@ -24,3 +25,14 @@ class TileMap(object):
 
     def char_to_tile(self, c):
         return self._char_to_tile.get(c, TileMap.Tile.EMPTY)
+
+    def random_position(self, required_type=None):
+        x, y = 0, 0
+
+        condition = True
+        while condition:
+            x = random.randint(0, self.width-1)
+            y = random.randint(0, self.height-1)
+            condition = required_type is not None and self.tiles[y][x] != required_type
+
+        return x, y
