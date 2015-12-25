@@ -5,6 +5,7 @@ from components.graphics import Graphics
 from components.position import Position
 from components.snake_info import SnakeInfo
 from components.player import Player
+from components.power_up import PowerUp
 import game_config
 
 
@@ -57,4 +58,12 @@ class EntityCreator(object):
         tile_map = TileMap()
         tile_map.load_from_file(file)
         entity = Entity([tile_map])
+        self._engine.add_entity(entity)
+
+    def create_power_up(self, x, y, type, effect):
+        entity = Entity()
+        entity.add(Position(x, y, 0))
+        entity.add(Graphics(self._sprites['power_up_atlas'], type*32, 0, game_config.tile_size, game_config.tile_size))
+        entity.add(PowerUp(effect))
+
         self._engine.add_entity(entity)
