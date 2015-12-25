@@ -29,7 +29,8 @@ class EntityComponentsPacker(object):
 
     def on_entity_unregistered(self, entity):
         for _, group in self.groups.items():
-            group.remove(entity)
+            if entity in group:
+                group.remove(entity)
 
     def match_group(self, entity, group):
         hits = 0
