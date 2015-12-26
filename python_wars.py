@@ -7,9 +7,8 @@ from components.graphics import Graphics
 from components.motion import Motion
 from components.position import Position
 from components.tile_map import TileMap
-from components.snake_info import SnakeInfo
 from components.power_up import PowerUp
-from components.player import Player
+from components.player_info import PlayerInfo
 import game_config
 from engine.engine import Engine
 from engine.frame_provider import FrameProvider
@@ -46,10 +45,10 @@ class PythonWars(object):
 
     def init_engine(self):
         self.engine._entity_components_packer.add('render', [Graphics, Position])
-        self.engine._entity_components_packer.add('snake-movement', [Position, Motion, SnakeInfo])
-        self.engine._entity_components_packer.add('snake-control', [Motion, SnakeInfo])
+        # self.engine._entity_components_packer.add('snake-movement', [Position, Motion, SnakeInfo])
+        # self.engine._entity_components_packer.add('snake-control', [Motion, SnakeInfo])
         self.engine._entity_components_packer.add('tile_map', [TileMap])
-        self.engine._entity_components_packer.add('player', [Player])
+        self.engine._entity_components_packer.add('player', [PlayerInfo, Motion])
         self.engine._entity_components_packer.add('power_up', [Position, PowerUp])
 
         self.engine.add_system(SnakeCollisionSystem(self.engine), 0)
@@ -59,8 +58,8 @@ class PythonWars(object):
         self.engine.add_system(SnakeMovementSystem(self.engine, 200), 2)
         self.engine.add_system(SnakeControlSystem(self.engine), 3)
 
-        snake = self.creator.create_snake(1)
-        self.creator.create_player(snake)
+        snake = self.creator.create_snake()
+        self.creator.create_player(snake, 1, True)
         self.creator.create_map("assets/maps/0.txt")
 
         "add system, entities etc."
