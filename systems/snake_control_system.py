@@ -1,5 +1,5 @@
 from components.motion import Motion
-from components.snake_info import SnakeInfo
+from components.player_info import PlayerInfo
 from engine.system import System
 import pygame
 import game_config
@@ -14,15 +14,17 @@ class SnakeControlSystem(System):
         pass
 
     def update(self, time):
-        entities = self._engine.get_entity_by_group('snake-control')
+        players = self._engine.get_entity_by_group('player')
 
         pressed = pygame.key.get_pressed()
 
-        for entity in entities:
-            info = entity.get(SnakeInfo)
-            motion = entity.get(Motion)
+        for player in players:
+            player_info = player.get(PlayerInfo)
+            if not player_info.is_local:
+                continue
 
-            if not info.is_head or motion.changes_blocked:
+            motion = player.get(Motion)
+            if motion.changes_blocked:
                 continue
 
             if pressed[pygame.K_UP] and motion.y_velocity == 0:
