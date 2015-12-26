@@ -1,6 +1,6 @@
 from components.motion import Motion
+from components.player_info import PlayerInfo
 from components.position import Position
-from components.snake_info import SnakeInfo
 from engine.system import System
 import game_config
 
@@ -17,37 +17,29 @@ class SnakeMovementSystem(System):
 
     def update(self, time):
         self._elapsed_time += time
-        entities = self._engine.get_entity_by_group('snake-movement')
+        if self._elapsed_time < self._wait_interval:
+            return
 
-        for entity in entities:
-            info = entity.get(SnakeInfo)
+        players = self._engine.get_entity_by_group('player')
 
-            if not info.is_head or self._elapsed_time < self._wait_interval:
-                continue
+        for player in players:
+            snake = player.get(PlayerInfo).snake
+            motion = player.get(Motion)
+            old_position = Position()
+            new_position = Position()
+            head_position = snake[0].get(Position)
+            new_position.set(head_position)
+            new_position.move(motion, 1)
+            motion.changes_blocked = False
 
-            tail = self._find_segment_pointing_at(entities, None)
-            b_tail = self._find_segment_pointing_at(entities, tail)
-            bb_tail = self._find_segment_pointing_at(entities, b_tail)
+            for segment in snake:
+                segment_position = segment.get(Position)
+                old_position.set(segment_position)
+                segment_position.set(new_position)
+                self._wrap_position(segment_position)
+                new_position.set(old_position)
 
-            head_pos = entity.get(Position)
-            head_mot = entity.get(Motion)
-            tail_pos = tail.get(Position)
-            bef_tail_pos = b_tail.get(Position)
-            bef_tail_info = b_tail.get(SnakeInfo)
-
-            tail_pos.set(bef_tail_pos)
-            bef_tail_pos.set(head_pos)
-            head_pos.x = head_pos.x + head_mot.x_velocity
-            head_pos.y = head_pos.y + head_mot.y_velocity
-            head_mot.changes_blocked = False
-
-            self._wrap_position(head_pos)
-
-            bef_tail_info.next_segment = info.next_segment
-            bb_tail.get(SnakeInfo).next_segment = tail
-            info.next_segment = b_tail
-
-            self._elapsed_time -= self._wait_interval
+        self._elapsed_time -= self._wait_interval
 
     def end(self):
         pass
@@ -62,12 +54,4 @@ class SnakeMovementSystem(System):
             position.y += game_config.screen_size[1]
         if position.y >= game_config.screen_size[1]:
             position.y -= game_config.screen_size[1]
-
-    def _find_segment_pointing_at(self, entities, target):
-        for e in entities:
-            e_info = e.get(SnakeInfo)
-            if e_info.next_segment == target:
-                return e
-
-        return None
 
