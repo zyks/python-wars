@@ -13,8 +13,8 @@ class PowerUpSpawnSystem(System):
         self._entity_creator = entity_creator
         self._elapsed_time = 0
         self._creating_interval = creating_interval
-        self._power_up_types = [(self.apple_effect, 2),
-                                (self.wormy_apple_effect, 15)]
+        self._power_up_types = [(apple_effect, 2),
+                                (wormy_apple_effect, 15)]
 
     def start(self):
         pass
@@ -35,19 +35,6 @@ class PowerUpSpawnSystem(System):
                     y *= game_config.tile_size
                     self._entity_creator.create_power_up(x, y, i, effect)
                     self._elapsed_time -= self._creating_interval
-
-    def wormy_apple_effect(self, player_info_component):
-        tail = player_info_component.snake[-1]
-        tail_pos = tail.get(Position)
-        tail_pos.set(player_info_component.snake[-2].get(Position))
-        self._engine.remove_entity(player_info_component.snake[-2])
-        del player_info_component.snake[-2]
-
-    def apple_effect(self, player_info_component):
-        tail = player_info_component.snake[-1]
-        tail_pos = tail.get(Position)
-        segment = self._entity_creator.create_snake_segment(tail_pos.x, tail_pos.y, 0, False, False)
-        player_info_component.snake.insert(-1, segment)
 
     def _get_free_position(self, tiles, players):
         x, y = 0, 0
@@ -74,4 +61,19 @@ class PowerUpSpawnSystem(System):
                 return True
 
         return False
+
+
+def wormy_apple_effect(engine, player_info_component):
+    tail = player_info_component.snake[-1]
+    tail_pos = tail.get(Position)
+    tail_pos.set(player_info_component.snake[-2].get(Position))
+    engine.remove_entity(player_info_component.snake[-2])
+    del player_info_component.snake[-2]
+
+
+def apple_effect(entity_creator, player_info_component):
+    tail = player_info_component.snake[-1]
+    tail_pos = tail.get(Position)
+    segment = entity_creator.create_snake_segment(tail_pos.x, tail_pos.y, 0, False, False)
+    player_info_component.snake.insert(-1, segment)
 

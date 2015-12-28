@@ -1,5 +1,5 @@
 from components.position import Position
-from components.power_up import PowerUp
+from components.effect import Effect
 from components.tile_map import TileMap
 from components.player_info import PlayerInfo
 from engine.system import System
@@ -8,8 +8,9 @@ import game_config
 
 class SnakeCollisionSystem(System):
 
-    def __init__(self, engine):
+    def __init__(self, engine, entity_creator):
         self._engine = engine
+        self._entity_creator = entity_creator
 
     def start(self):
         pass
@@ -34,7 +35,13 @@ class SnakeCollisionSystem(System):
             power_up_pos = power_up.get(Position)
 
             if snake_pos.x == power_up_pos.x and snake_pos.y == power_up_pos.y:
-                power_up.get(PowerUp).effect(player_info_component)
+                effect = power_up.get(Effect).effect
+
+                if effect.__name__ == 'apple_effect':
+                    effect(self._entity_creator, player_info_component)
+                elif effect.__name__ == 'wormy_apple_effect':
+                    effect(self._engine, player_info_component)
+
                 self._engine.remove_entity(power_up)
 
     def check_collision_with_walls(self, snake, map):
