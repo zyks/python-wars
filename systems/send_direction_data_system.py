@@ -12,7 +12,7 @@ class SendDirectionDataSystem(System):
         self._port = port
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._elapsed_time = 0
-        self._sending_interval = 80
+        self._sending_interval = 40
 
     def start(self):
         pass

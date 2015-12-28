@@ -4,3 +4,9 @@ class Motion(object):
         self.y_velocity = y_velocity
         self.changes_blocked = False
 
+    def set(self, x_vel, y_vel):
+        if self.x_velocity != x_vel or self.y_velocity != y_vel:
+            self.x_velocity = x_vel
+            self.y_velocity = y_vel
+            self.changes_blocked = True
+

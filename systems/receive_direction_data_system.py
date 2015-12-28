@@ -47,17 +47,11 @@ class ReceiveDirectionDataSystem(System):
         player_motion = player.get(Motion)
 
         if move == 'UP':
-            player_motion.x_velocity = 0
-            player_motion.y_velocity = (-1) * game_config.tile_size
+            player_motion.set(0, (-1) * game_config.tile_size)
         elif move == 'DOWN':
-            player_motion.x_velocity = 0
-            player_motion.y_velocity = game_config.tile_size
+            player_motion.set(0, game_config.tile_size)
         elif move == 'LEFT':
-            player_motion.x_velocity = (-1) * game_config.tile_size
-            player_motion.y_velocity = 0
+            player_motion.set((-1) * game_config.tile_size, 0)
         elif move == 'RIGHT':
-            player_motion.x_velocity = game_config.tile_size
-            player_motion.y_velocity = 0
-        else:
-            print('Player ', player.get(PlayerInfo).number, ' move error')
+            player_motion.set(game_config.tile_size, 0)
 
