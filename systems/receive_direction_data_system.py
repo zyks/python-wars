@@ -12,6 +12,7 @@ class ReceiveDirectionDataSystem(System):
         self._port = port
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._socket.bind(('', self._port))
+        self._socket.settimeout(0.1)
 
     def start(self):
         pass
@@ -22,14 +23,15 @@ class ReceiveDirectionDataSystem(System):
 
         moves = {}
         for _ in range(0, players_number):
-            data, _ = self._socket.recvfrom(1024)
+            try:
+                data, _ = self._socket.recvfrom(1024)
+            except socket.error:
+                return
             player_number, move = data.decode().split('-')
             moves[player_number] = move
 
         if len(moves) != 0:
-            print('Direction data received')
-
-        self._apply_moves(players, moves)
+            self._apply_moves(players, moves)
 
     def end(self):
         pass
@@ -38,7 +40,7 @@ class ReceiveDirectionDataSystem(System):
         for player_number, move in moves.items():
             for player in players:
                 player_info = player.get(PlayerInfo)
-                if player_info.number == player_number:
+                if str(player_info.number) == player_number:
                     self._apply_move(player, move)
 
     def _apply_move(self, player, move):
