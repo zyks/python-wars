@@ -1,92 +1,38 @@
+from enum import Enum
+import random
 import sys
-
-import pygame
-from pygame.constants import *
-
-from components.graphics import Graphics
-from components.motion import Motion
-from components.position import Position
-from components.tile_map import TileMap
-from components.effect import Effect
-from components.player_info import PlayerInfo
-import game_config
-from engine.engine import Engine
-from engine.frame_provider import FrameProvider
-from entity_creator import EntityCreator
-from systems.power_up_spawn_system import PowerUpSpawnSystem
-from systems.receive_direction_data_system import ReceiveDirectionDataSystem
-from systems.receive_game_state_system import ReceiveGameStateSystem
-from systems.render_system import RenderSystem
-from systems.send_direction_data_system import SendDirectionDataSystem
-from systems.send_game_state_system import SendGameStateSystem
-from systems.snake_collision_system import SnakeCollisionSystem
-from systems.snake_control_system import SnakeControlSystem
-from systems.tile_map_render_system import TileMapRenderSystem
-from systems.snake_movement_system import SnakeMovementSystem
+import threading
+from game_client import GameClient
+from game_server import GameServer
 
 
 class PythonWars(object):
+    def __init__(self, client_mode=True, server_mode=True):
+        self._client_mode = client_mode
+        self._server_mode = server_mode
 
-    def __init__(self):
-        pygame.init()
-        pygame.display.set_caption(game_config.title)
-
-        self.load_sprites()
-
-        self.engine = Engine()
-        self.creator = EntityCreator(self.engine, self.sprites)
-        self.screen = pygame.display.set_mode(game_config.screen_size)
-        self.frame_provider = FrameProvider(pygame.time.get_ticks)
-
-        self.init_engine()
-
-    def load_sprites(self):
-        self.sprites = {'tile_atlas': pygame.image.load('assets/tiles.jpg'),
-                        'power_up_atlas': pygame.image.load('assets/power_ups.png'),
-                        'snake_head': pygame.image.load('assets/head.jpg'),
-                        'snake_body': pygame.image.load('assets/body.jpg'),
-                        'snake_tail': pygame.image.load('assets/tail.jpg')}
-
-    def init_engine(self):
-        self.engine._entity_components_packer.add('render', [Graphics, Position])
-        # self.engine._entity_components_packer.add('snake-movement', [Position, Motion, SnakeInfo])
-        # self.engine._entity_components_packer.add('snake-control', [Motion, SnakeInfo])
-        self.engine._entity_components_packer.add('tile_map', [TileMap])
-        self.engine._entity_components_packer.add('player', [PlayerInfo, Motion])
-        self.engine._entity_components_packer.add('power_up', [Position, Effect])
-
-        self.engine.add_system(SnakeCollisionSystem(self.engine, self.creator), 0)
-        self.engine.add_system(PowerUpSpawnSystem(self.engine, self.creator), 0)
-        self.engine.add_system(TileMapRenderSystem(self.engine, self.screen, self.sprites['tile_atlas']), 2)
-        self.engine.add_system(RenderSystem(self.engine, self.screen), 1)
-        self.engine.add_system(SnakeMovementSystem(self.engine, 200), 2)
-        self.engine.add_system(SnakeControlSystem(self.engine), 3)
-        self.engine.add_system(SendDirectionDataSystem(self.engine, 'localhost', 8082), 2)
-        self.engine.add_system(ReceiveDirectionDataSystem(self.engine, 8082), 1)
-        self.engine.add_system(SendGameStateSystem(self.engine), 2)
-        self.engine.add_system(ReceiveGameStateSystem(self.engine, 8081), 1)
-
-
-        snake = self.creator.create_snake()
-        self.creator.create_player(snake, 1, True, 'localhost', 8081)
-        self.creator.create_map("assets/maps/0.txt")
-
-        "add system, entities etc."
-
-    def check_quit_condition(self, delta):
-        pygame.display.update()
-
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+        if self._server_mode:
+            self._server = GameServer()
+            self._server_thread = threading.Thread(target=self._server.run)
+        if self._client_mode:
+            self._client = GameClient(8084)
 
     def run(self):
-        self.frame_provider.add_action(self.engine.update)
-        self.frame_provider.add_action(self.check_quit_condition)
-        self.frame_provider.start()
+        if self._server_mode:
+            self._server_thread.start()
 
+        if self._client_mode:
+            self._client.run()
 
-g = PythonWars()
+        self._server_thread.join()
+
+server_mode = False
+client_mode = False
+for arg in sys.argv:
+    if arg == "--server":
+        server_mode = True
+    elif arg == "--client":
+        client_mode = True
+
+g = PythonWars(client_mode, server_mode)
 g.run()
-
