@@ -22,6 +22,10 @@ class EntityComponentsPacker(object):
 
         return self.groups[name]
 
+    def clear(self):
+        for name in self.groups:
+            self.groups[name] = []
+
     def on_entity_registered(self, entity):
         for name in self.registered_groups:
             if self.match_group(entity, name):
