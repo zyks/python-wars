@@ -2,9 +2,20 @@ from engine.exceptions import NonexistentComponent
 
 
 class Entity(object):
-    def __init__(self, components=[]):
+    next_id = 0
+
+    def __init__(self, components=[], name=""):
+        if name == "":
+            name = Entity.next_id
+
+        self._name = name
         self.components = {}
         self.add(components)
+
+        Entity.next_id += 1
+
+    def name(self):
+        return self._name
 
     def add(self, components):
         if not isinstance(components, list):
