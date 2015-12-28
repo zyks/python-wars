@@ -10,15 +10,14 @@ import game_config
 
 class EntityCreator(object):
 
-    def __init__(self, engine, sprites):
+    def __init__(self, engine):
         self._engine = engine
-        self._sprites = sprites
 
-    def create_player(self, snake, number, is_local, host, port):
+    def create_player(self, snake, number, is_local, host, port, name=""):
         player_info_component = PlayerInfo(number, is_local, host, port)
         player_info_component.snake = snake
         motion_component = Motion(game_config.tile_size, 0)
-        player = Entity([player_info_component, motion_component])
+        player = Entity([player_info_component, motion_component], name)
         self._engine.add_entity(player)
 
     def create_snake(self):
@@ -38,11 +37,11 @@ class EntityCreator(object):
         return snake
 
     def create_snake_segment(self, x, y, rotation, is_head, is_tail):
-        image = self._sprites['snake_body']
+        image = 'snake_body'
         if is_head:
-            image = self._sprites['snake_head']
+            image = 'snake_head'
         if is_tail:
-            image = self._sprites['snake_tail']
+            image = 'snake_tail'
 
         entity = Entity()
         entity.add(Graphics(image, 0, 0))
@@ -50,16 +49,16 @@ class EntityCreator(object):
         self._engine.add_entity(entity)
         return entity
 
-    def create_map(self, file):
+    def create_map(self, file, name=""):
         tile_map = TileMap()
         tile_map.load_from_file(file)
-        entity = Entity([tile_map])
+        entity = Entity([tile_map], name)
         self._engine.add_entity(entity)
 
     def create_power_up(self, x, y, type, effect):
         entity = Entity()
         entity.add(Position(x, y, 0))
-        entity.add(Graphics(self._sprites['power_up_atlas'], type*32, 0, game_config.tile_size, game_config.tile_size))
+        entity.add(Graphics('power_up_atlas', type*32, 0, game_config.tile_size, game_config.tile_size))
         entity.add(Effect(effect))
 
         self._engine.add_entity(entity)
