@@ -7,14 +7,18 @@ from components.graphics import Graphics
 from components.motion import Motion
 from components.position import Position
 from components.tile_map import TileMap
-from components.power_up import PowerUp
+from components.effect import Effect
 from components.player_info import PlayerInfo
 import game_config
 from engine.engine import Engine
 from engine.frame_provider import FrameProvider
 from entity_creator import EntityCreator
 from systems.power_up_spawn_system import PowerUpSpawnSystem
+from systems.receive_direction_data_system import ReceiveDirectionDataSystem
+from systems.receive_game_state_system import ReceiveGameStateSystem
 from systems.render_system import RenderSystem
+from systems.send_direction_data_system import SendDirectionDataSystem
+from systems.send_game_state_system import SendGameStateSystem
 from systems.snake_collision_system import SnakeCollisionSystem
 from systems.snake_control_system import SnakeControlSystem
 from systems.tile_map_render_system import TileMapRenderSystem
@@ -49,17 +53,22 @@ class PythonWars(object):
         # self.engine._entity_components_packer.add('snake-control', [Motion, SnakeInfo])
         self.engine._entity_components_packer.add('tile_map', [TileMap])
         self.engine._entity_components_packer.add('player', [PlayerInfo, Motion])
-        self.engine._entity_components_packer.add('power_up', [Position, PowerUp])
+        self.engine._entity_components_packer.add('power_up', [Position, Effect])
 
-        self.engine.add_system(SnakeCollisionSystem(self.engine), 0)
+        self.engine.add_system(SnakeCollisionSystem(self.engine, self.creator), 0)
         self.engine.add_system(PowerUpSpawnSystem(self.engine, self.creator), 0)
         self.engine.add_system(TileMapRenderSystem(self.engine, self.screen, self.sprites['tile_atlas']), 2)
         self.engine.add_system(RenderSystem(self.engine, self.screen), 1)
         self.engine.add_system(SnakeMovementSystem(self.engine, 200), 2)
         self.engine.add_system(SnakeControlSystem(self.engine), 3)
+        self.engine.add_system(SendDirectionDataSystem(self.engine, 'localhost', 8082), 2)
+        self.engine.add_system(ReceiveDirectionDataSystem(self.engine, 8082), 1)
+        self.engine.add_system(SendGameStateSystem(self.engine), 2)
+        self.engine.add_system(ReceiveGameStateSystem(self.engine, 8081), 1)
+
 
         snake = self.creator.create_snake()
-        self.creator.create_player(snake, 1, True)
+        self.creator.create_player(snake, 1, True, 'localhost', 8081)
         self.creator.create_map("assets/maps/0.txt")
 
         "add system, entities etc."
