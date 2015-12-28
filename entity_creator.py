@@ -4,7 +4,7 @@ from engine.entity import Entity
 from components.graphics import Graphics
 from components.position import Position
 from components.player_info import PlayerInfo
-from components.power_up import PowerUp
+from components.effect import Effect
 import game_config
 
 
@@ -14,8 +14,8 @@ class EntityCreator(object):
         self._engine = engine
         self._sprites = sprites
 
-    def create_player(self, snake, number, is_local):
-        player_info_component = PlayerInfo(number, is_local)
+    def create_player(self, snake, number, is_local, host, port):
+        player_info_component = PlayerInfo(number, is_local, host, port)
         player_info_component.snake = snake
         motion_component = Motion(game_config.tile_size, 0)
         player = Entity([player_info_component, motion_component])
@@ -60,7 +60,7 @@ class EntityCreator(object):
         entity = Entity()
         entity.add(Position(x, y, 0))
         entity.add(Graphics(self._sprites['power_up_atlas'], type*32, 0, game_config.tile_size, game_config.tile_size))
-        entity.add(PowerUp(effect))
+        entity.add(Effect(effect))
 
         self._engine.add_entity(entity)
 
