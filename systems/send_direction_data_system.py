@@ -11,11 +11,19 @@ class SendDirectionDataSystem(System):
         self._host = host
         self._port = port
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        self._elapsed_time = 0
+        self._sending_interval = 80
 
     def start(self):
         pass
 
     def update(self, time):
+        self._elapsed_time += time
+        if self._elapsed_time >= self._sending_interval:
+            self._elapsed_time -= self._sending_interval
+        else:
+            return
+
         players = self._engine.get_entity_by_group('player')
 
         for player in players:
