@@ -64,8 +64,7 @@ class GameClient(object):
     def check_quit_condition(self):
         for event in pygame.event.get():
             if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+                self._frame_provider.stop()
 
     def run(self):
         self._frame_provider.add_action(self._engine.update)

@@ -24,6 +24,7 @@ class PythonWars(object):
         if self._client_mode:
             self._client.run()
 
+        self._server._frame_provider.stop()
         self._server_thread.join()
 
 server_mode = False
