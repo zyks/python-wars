@@ -14,12 +14,16 @@ class ReceiveGameStateSystem(System):
         self._port = port
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self._socket.bind(('', self._port))
+        self._socket.settimeout(0.01)
 
     def start(self):
         pass
 
     def update(self, time):
-        data, _ = self._socket.recvfrom(65565)
+        try:
+            data, _ = self._socket.recvfrom(65565)
+        except socket.error:
+            return
 
         unpickled = pickle.loads(data)
 
