@@ -30,7 +30,7 @@ class SendGameStateSystem(System):
 
             for player in players:
                 player_info = player.get(PlayerInfo)
-                self._socket.sendto(pickled, (player_info.host, player_info.port))
+                self._socket.sendto(pickled, player_info.address)
 
     def end(self):
         pass

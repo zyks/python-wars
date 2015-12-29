@@ -7,8 +7,9 @@ import game_config
 
 class SnakeControlSystem(System):
 
-    def __init__(self, engine):
+    def __init__(self, engine, client_player_number):
         self._engine = engine
+        self._client_player_number = client_player_number
 
     def start(self):
         pass
@@ -20,7 +21,7 @@ class SnakeControlSystem(System):
 
         for player in players:
             player_info = player.get(PlayerInfo)
-            if not player_info.is_local:
+            if player_info.number != self._client_player_number:
                 continue
 
             motion = player.get(Motion)

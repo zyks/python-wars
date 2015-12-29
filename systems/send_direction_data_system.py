@@ -6,8 +6,9 @@ import socket
 
 class SendDirectionDataSystem(System):
 
-    def __init__(self, engine, host, port):
+    def __init__(self, engine, host, port, client_player_number):
         self._engine = engine
+        self._client_player_number = client_player_number
         self._host = host
         self._port = port
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -29,7 +30,7 @@ class SendDirectionDataSystem(System):
         for player in players:
             player_info = player.get(PlayerInfo)
 
-            if not player_info.is_local:
+            if player_info.number != self._client_player_number:
                 continue
 
             player_motion = player.get(Motion)

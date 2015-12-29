@@ -1,9 +1,9 @@
 class PlayerInfo(object):
 
-    def __init__(self, number, is_local, host, port):
+    def __init__(self, number, address):
         self.snake = []
         self.number = number
-        self.is_local = is_local
-        self.host = host
-        self.port = port
+        self.address = address
+        # self.host = host
+        # self.port = port
 

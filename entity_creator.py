@@ -13,8 +13,8 @@ class EntityCreator(object):
     def __init__(self, engine):
         self._engine = engine
 
-    def create_player(self, snake, number, is_local, host, port, name=""):
-        player_info_component = PlayerInfo(number, is_local, host, port)
+    def create_player(self, snake, number, address, name=""):
+        player_info_component = PlayerInfo(number, address)
         player_info_component.snake = snake
         motion_component = Motion(game_config.tile_size, 0)
         player = Entity([player_info_component, motion_component], name)
