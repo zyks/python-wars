@@ -13,9 +13,8 @@ class FrameProvider(object):
     def start(self):
         self._working = True
         self._clock = self._time_provider()
-
         while self._working:
-            self._delta = self._time_provider() - self._clock
+            self._delta = (self._time_provider() - self._clock) * 1000
             self._clock = self._time_provider()
 
             for action in self._actions:
@@ -23,3 +22,4 @@ class FrameProvider(object):
 
     def stop(self):
         self._working = False
+
