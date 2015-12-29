@@ -7,25 +7,28 @@ from game_server import GameServer
 
 
 class PythonWars(object):
-    def __init__(self, client_mode=True, server_mode=True):
+
+    def __init__(self, client_mode=False, server_mode=False):
         self._client_mode = client_mode
         self._server_mode = server_mode
 
         if self._server_mode:
             self._server = GameServer()
-            self._server_thread = threading.Thread(target=self._server.run)
-        if self._client_mode:
-            self._client = GameClient(8084)
+            # self._server_thread = threading.Thread(target=self._server.run)
+        elif self._client_mode:
+            self._client = GameClient(int(sys.argv[2]))
 
     def run(self):
         if self._server_mode:
-            self._server_thread.start()
+            self._server.run()
+            self._server._frame_provider.stop()
+            # self._server_thread.start()
 
-        if self._client_mode:
+        elif self._client_mode:
             self._client.run()
 
-        self._server._frame_provider.stop()
-        self._server_thread.join()
+        # self._server._frame_provider.stop()
+        # self._server_thread.join()
 
 server_mode = False
 client_mode = False

@@ -1,5 +1,3 @@
-import sys
-
 import pygame
 from pygame.constants import *
 
@@ -18,19 +16,28 @@ from systems.render_system import RenderSystem
 from systems.send_direction_data_system import SendDirectionDataSystem
 from systems.snake_control_system import SnakeControlSystem
 from systems.tile_map_render_system import TileMapRenderSystem
+import socket
+from time import time
 
 
 class GameClient(object):
 
     def __init__(self, client_port):
+        self._server_address = 'localhost'
+        self._server_port = 8080
         self._client_port = client_port
+        self._client_player_number = -1
+        self.register('alfred')
+
         pygame.init()
         pygame.display.set_caption(game_config.title)
 
+        self.sprites = {}
         self.load_sprites()
 
         self._engine = Engine()
-        self._frame_provider = FrameProvider(pygame.time.get_ticks)
+        # self._frame_provider = FrameProvider(pygame.time.get_ticks)
+        self._frame_provider = FrameProvider(time)
         self._creator = EntityCreator(self._engine)
         self._screen = pygame.display.set_mode(game_config.screen_size)
 
@@ -54,8 +61,8 @@ class GameClient(object):
     def init_systems(self):
         self._engine.add_system(TileMapRenderSystem(self._engine, self._screen, self.sprites['tile_atlas']), 2)
         self._engine.add_system(RenderSystem(self._engine, self._screen, self.sprites), 1)
-        self._engine.add_system(SnakeControlSystem(self._engine), 3)
-        self._engine.add_system(SendDirectionDataSystem(self._engine, 'localhost', 8082), 2)
+        self._engine.add_system(SnakeControlSystem(self._engine, self._client_player_number), 3)
+        self._engine.add_system(SendDirectionDataSystem(self._engine, 'localhost', 8080, self._client_player_number), 2)
         self._engine.add_system(ReceiveGameStateSystem(self._engine, self._client_port), 1)
 
     def init_gameplay(self):
@@ -70,5 +77,28 @@ class GameClient(object):
         self._frame_provider.add_action(self._engine.update)
         self._frame_provider.add_action(lambda _: self.check_quit_condition())
         self._frame_provider.add_action(lambda _: pygame.display.update())
-
         self._frame_provider.start()
+
+    def register(self, player_name):
+        _socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        _socket.bind(('', self._client_port))
+        _socket.settimeout(1)
+
+        while True:
+            print('Waiting for register')
+            _socket.sendto(('register-' + player_name).encode(), (self._server_address, self._server_port))
+
+            try:
+                data, address = _socket.recvfrom(1024)
+            except socket.error:
+                continue
+
+            [msg, client_player_number] = data.decode().split('-')
+
+            if msg == 'registered':
+                self._client_player_number = int(client_player_number)
+                print('my number:', client_player_number)
+                break
+
+        print('Player registered')
+
