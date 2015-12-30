@@ -48,7 +48,7 @@ class GameServer(object):
         self._engine.add_system(SendGameStateSystem(self._engine), 2)
 
     def init_gameplay(self):
-        self._creator.create_map("assets/maps/0.txt")
+        self._creator.create_map("assets/maps/0.txt", "map")
 
     def run(self):
         self._frame_provider.add_action(self._engine.update)
@@ -71,11 +71,10 @@ class GameServer(object):
             [msg, player_name] = data.decode().split('-')
 
             if msg == 'register':
-                snake = self._creator.create_snake()
                 self._registered_players += 1
                 player_number = self._registered_players
                 print('Registered player ', player_number, ' with address: ', address)
-                self._creator.create_player(snake, player_number, address, player_name)
+                self._creator.create_player(player_number, address, player_name)
 
                 for _ in range(0, 3):
                     _socket.sendto(('registered-' + str(player_number)).encode(), address)
