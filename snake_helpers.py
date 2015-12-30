@@ -25,7 +25,7 @@ class SnakeHelpers(object):
             snake.insert(-1, segment)
 
     def kill_snake(self, player_info_component):
-        player_info_component.state = PlayerInfo.State.DEAD
+        player_info_component.alive = False
         for s in player_info_component.snake:
             self._engine.remove_entity(s)
         player_info_component.snake = []
