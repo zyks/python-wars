@@ -49,7 +49,7 @@ class SnakeCollisionSystem(System):
         head_y_tile = int(snake[0].get(Position).y / game_config.tile_size)
 
         if map.tiles[head_y_tile][head_x_tile] == TileMap.Tile.WALL:
-            print("Collision")
+            pass
 
     def check_collision_with_players(self, player_info_component, players):
         snake = player_info_component.snake
@@ -65,8 +65,29 @@ class SnakeCollisionSystem(System):
 
                 segment_position = player_snake[i].get(Position)
                 if head_pos.x == segment_position.x and head_pos.y == segment_position.y:
+                    eaten = len(player_snake) - (i + 1)
+                    if eaten < len(player_info_component.snake):
+                        self.shorten_snake(player.get(PlayerInfo), i + 1)
+                        self.extend_snake(player_info_component, len(snake) + eaten)
+                    else:
+                        print("Snake ", player_info_component.number, " is dead!")
                     print(u'Player {0:d} hit Player\'s {1:d} segment {2:d}'
                           .format(player_info_component.number, player_number, i))
+                    break
+
+    def shorten_snake(self, player_info, desired_length):
+        snake = player_info.snake
+        for i in range(0,desired_length-1):
+            if len(snake) > desired_length:
+                self._engine.remove_entity(snake[desired_length-1])
+                del snake[desired_length-1]
+
+    def extend_snake(self, player_info, desired_length):
+        snake = player_info.snake
+        tail_pos = snake[-1].get(Position)
+        for i in range(0, desired_length - len(snake)):
+            segment = self._entity_creator.create_snake_segment(tail_pos.x, tail_pos.y, 0, False, False)
+            snake.insert(-1, segment)
 
     def end(self):
         pass
