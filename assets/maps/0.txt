@@ -1,19 +1,19 @@
-XXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX   XXXXXXXXX   XXXXX
 X                       X
 X                       X
 X  XX             V XX  X
 X  XX               XX  X
-X  >                    X
-X                       X
+   >                     
+                         
 X        XXXXXXX        X
 X                       X
 X                       X
 X                       X
 X        XXXXXXX        X
-X                       X
-X                    <  X
+                         
+                     <   
 X  XX               XX  X
 X  XX ^             XX  X
 X                       X
 X                       X
-XXXXXXXXXXXXXXXXXXXXXXXXX
+XXXXX   XXXXXXXXX   XXXXX
