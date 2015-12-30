@@ -1,5 +1,6 @@
 from enum import Enum
 import random
+import game_config
 
 
 class TileMap(object):
@@ -7,7 +8,13 @@ class TileMap(object):
             EMPTY = 0
             WALL = 1
 
+    class Spawn:
+        def __init__(self, pos, dir):
+            self.initial_position = pos
+            self.initial_direction = dir
+
     def __init__(self):
+        self.spawns = []
         self.tiles = []
         self.width = 0
         self.height = 0
@@ -17,14 +24,28 @@ class TileMap(object):
 
     def load_from_file(self, file_name):
         with open(file_name) as f:
-            for line in f:
-                self.tiles.append([self.char_to_tile(c) for c in line.rstrip("\r\n")])
+            for i, line in enumerate(f):
+                line = line.rstrip("\r\n")
+                self.tiles.append([self.char_to_tile(c) for c in line])
+                self.spawns += [self.char_to_spawn(c, j, i) for j, c in enumerate(line) if c in ['>', '^', '<', 'V']]
+
         self.height = len(self.tiles)
         if self.height > 0:
             self.width = len(self.tiles[0])
 
     def char_to_tile(self, c):
         return self._char_to_tile.get(c, TileMap.Tile.EMPTY)
+
+    def char_to_spawn(self, c, column, row):
+        pos = (column * game_config.tile_size, row * game_config.tile_size)
+        if c == '>':
+            return TileMap.Spawn(pos, (game_config.tile_size, 0))
+        if c == '<':
+            return TileMap.Spawn(pos, ((-1) * game_config.tile_size, 0))
+        if c == '^':
+            return TileMap.Spawn(pos, (0, (-1) * game_config.tile_size))
+        if c == 'V':
+            return TileMap.Spawn(pos, (0, game_config.tile_size))
 
     def random_position(self, required_type=None):
         x, y = 0, 0
