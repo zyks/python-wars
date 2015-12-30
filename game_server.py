@@ -21,7 +21,8 @@ from time import time
 
 class GameServer(object):
 
-    def __init__(self):
+    def __init__(self, nb_of_players):
+        self.nb_of_players = nb_of_players
         self._engine = Engine()
         self._creator = EntityCreator(self._engine)
         # self._frame_provider = FrameProvider(pygame.time.get_ticks)
@@ -60,7 +61,7 @@ class GameServer(object):
         _socket.bind(('', self._server_port))
         _socket.settimeout(1)
 
-        while self._registered_players < 2:
+        while self._registered_players < self.nb_of_players:
             print('Waiting for players')
 
             try:

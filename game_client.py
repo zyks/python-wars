@@ -22,12 +22,13 @@ from time import time
 
 class GameClient(object):
 
-    def __init__(self, client_port):
+    def __init__(self, client_port, client_name):
+        self._name = client_name
         self._server_address = 'localhost'
         self._server_port = 8080
         self._client_port = client_port
         self._client_player_number = -1
-        self.register('alfred')
+        self.register(self._name)
 
         pygame.init()
         pygame.display.set_caption(game_config.title)
