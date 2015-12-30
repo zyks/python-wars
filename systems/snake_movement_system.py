@@ -23,6 +23,9 @@ class SnakeMovementSystem(System):
         players = self._engine.get_entity_by_group('player')
 
         for player in players:
+            if not player.get(PlayerInfo).alive:
+                continue
+
             snake = player.get(PlayerInfo).snake
             motion = player.get(Motion)
             old_position = Position()
