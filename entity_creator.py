@@ -16,10 +16,10 @@ class EntityCreator(object):
     def create_player(self, number, address, name=""):
         spawns = self._engine.get_entity_by_name("map").get(TileMap).spawns
 
-        player_info_component = PlayerInfo(number, address)
+        player_info_component = PlayerInfo(number, address, name)
         player_info_component.snake = self.create_snake(spawns[number-1])
         motion_component = Motion(*spawns[number-1].initial_direction)
-        player = Entity([player_info_component, motion_component], name)
+        player = Entity([player_info_component, motion_component])
         self._engine.add_entity(player)
 
     def create_snake(self, spawn):

@@ -74,7 +74,7 @@ class GameServer(object):
             if msg == 'register':
                 self._registered_players += 1
                 player_number = self._registered_players
-                print('Registered player ', player_number, ' with address: ', address)
+                print('Registered player ', player_name,'(', player_number, ') with address: ', address)
                 self._creator.create_player(player_number, address, player_name)
 
                 for _ in range(0, 3):
