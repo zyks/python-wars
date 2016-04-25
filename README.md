@@ -1,7 +1,8 @@
 ## python-wars
 
 Python-wars is a simple, multiplatform, online multiplayer game written in python3 and pygame library. It is a modification of popular Snake game, except that there are many snakes on the game board and they can fight with each other.
-
+#### Screenschots
+![Gameplay](media/gameplay0.png?raw=true  "Gameplay with two players")
 ### Rules
 * Player can bite off one's tail fragment when it's shorter than the player's total length.
 * The fragment's length is a number of segments between the bitten one and the snake end.
@@ -12,8 +13,8 @@ Python-wars is a simple, multiplatform, online multiplayer game written in pytho
 * Player wins when other players lost, or when he reaches a length of 20 segments.
 
 ### Power-ups
-* Apple -- increases player's length by 1 [graphic]
-* Wormy apple -- decreases player's length by 1 [graphic]
+* ![Apple](media/apple.png?raw=true  "") Apple - increases player's length by 1 
+* ![Apple](media/rotten_apple.png?raw=true  "") Wormy apple - decreases player's length by 1
 
 ### Running the game
 First run `python_wars.py` in server mode (use `-h` or `--help` argument for help). `-p` specifies the players number. Example:  
