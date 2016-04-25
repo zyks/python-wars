@@ -1,7 +1,7 @@
 ## python-wars
 
 Python-wars is a simple, multiplatform, online multiplayer game written in python3 and pygame library. It is a modification of popular Snake game, except that there are many snakes on the game board and they can fight with each other.
-#### Screenschots
+#### Screenshots
 ![Gameplay](media/gameplay0.png?raw=true  "Gameplay with two players")
 ### Rules
 * Player can bite off one's tail fragment when it's shorter than the player's total length.
